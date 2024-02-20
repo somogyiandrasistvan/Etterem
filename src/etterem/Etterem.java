@@ -4,6 +4,12 @@
  */
 package etterem;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
@@ -33,10 +39,10 @@ public class Etterem extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        etlapLista = new javax.swing.JList<>();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        rendelesLista = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -45,22 +51,26 @@ public class Etterem extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList<>();
+        etelLista = new javax.swing.JList<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Étel"));
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        etlapLista.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(etlapLista);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -80,7 +90,7 @@ public class Etterem extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Rendelés"));
 
-        jScrollPane4.setViewportView(jList2);
+        jScrollPane4.setViewportView(rendelesLista);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -159,12 +169,12 @@ public class Etterem extends javax.swing.JFrame {
             }
         });
 
-        jList3.setModel(new javax.swing.AbstractListModel<String>() {
+        etelLista.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane5.setViewportView(jList3);
+        jScrollPane5.setViewportView(etelLista);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -199,21 +209,45 @@ public class Etterem extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenuItem1.setText("Megnyitás");
+        jMenu2.setText("Étlap");
+
+        jMenuItem1.setText("Mentés");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu2.add(jMenuItem1);
 
-        jMenuItem2.setText("Mentés");
+        jMenuItem2.setText("Megnyitás");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        jMenu2.add(jMenuItem2);
+
+        jMenu1.add(jMenu2);
+
+        jMenu3.setText("Rendelés");
+
+        jMenuItem3.setText("Mentés");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem3);
+
+        jMenuItem4.setText("Megnyitás");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem4);
+
+        jMenu1.add(jMenu3);
 
         jMenuBar1.add(jMenu1);
 
@@ -237,12 +271,12 @@ public class Etterem extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Object jcItem = jComboBox1.getSelectedItem();
         int jcIndex = jComboBox1.getSelectedIndex();
-        ListModel<String> lm = jList2.getModel();
+        ListModel<String> lm = rendelesLista.getModel();
         DefaultListModel dlm = new DefaultListModel();
         for (int i = 0; i < lm.getSize(); i++) {
             dlm.add(i, lm.getElementAt(i));
         }
-        String elem = jList1.getSelectedValue();
+        String elem = etlapLista.getSelectedValue();
         if (jcIndex == 0 || elem == null) {
             JOptionPane.showMessageDialog(null, "Nem választottál asztalt vagy ételt!");
         } else {
@@ -250,7 +284,7 @@ public class Etterem extends javax.swing.JFrame {
                 dlm.addElement(" -- " + jcItem + " -- ");
             }
             dlm.addElement(elem);
-            jList2.setModel(dlm);
+            rendelesLista.setModel(dlm);
             mentes = jcItem;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -258,7 +292,7 @@ public class Etterem extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         DefaultListModel dlm = new DefaultListModel();
-        ListModel<String> lm = jList3.getModel();
+        ListModel<String> lm = etelLista.getModel();
         for (int i = 0; i < lm.getSize(); i++) {
             dlm.add(i, lm.getElementAt(i));
         }
@@ -267,19 +301,75 @@ public class Etterem extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Nem adtál hozzá ételt!");
         } else {
             dlm.addElement(ujEtel);
-            jList3.setModel(dlm);
-            jList1.setModel(dlm);
+            etelLista.setModel(dlm);
+            etlapLista.setModel(dlm);
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-
+        Path path = Path.of("etlap.txt");
+        ListModel<String> lm = etelLista.getModel();
+        letolt(path, lm);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void letolt(Path path, ListModel<String> lm) {
+        String str = "";
+        for (int i = 0; i < lm.getSize(); i++) {
+            str += lm.getElementAt(i) + "\n";
+        }
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException ex) {
+            Logger.getLogger(Etterem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            Files.write(path, str.getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(Etterem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        Path path = Path.of("etlap.txt");
+        try {
+            DefaultListModel dlm = letolt(path);
+
+            etelLista.setModel(dlm);
+            etlapLista.setModel(dlm);
+
+        } catch (IOException ex) {
+            Logger.getLogger(Etterem.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        Path path = Path.of("rendeles.txt");
+        try {
+            DefaultListModel dlm = letolt(path);
+            rendelesLista.setModel(dlm);
+        } catch (IOException ex) {
+            Logger.getLogger(Etterem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        Path path = Path.of("rendeles.txt");
+        ListModel<String> lm = rendelesLista.getModel();
+
+        letolt(path, lm);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private DefaultListModel letolt(Path path) throws IOException {
+        List<String> sorok = Files.readAllLines(path);
+        DefaultListModel dlm = new DefaultListModel();
+        for (int i = 0; i < sorok.size(); i++) {
+            dlm.addElement(sorok.get(i));
+        }
+        return dlm;
+    }
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -314,18 +404,21 @@ public class Etterem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> etelLista;
+    private javax.swing.JList<String> etlapLista;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
-    private javax.swing.JList<String> jList3;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -335,5 +428,6 @@ public class Etterem extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JList<String> rendelesLista;
     // End of variables declaration//GEN-END:variables
 }
