@@ -1,6 +1,5 @@
-Item 1
-Item 2
-Item 3
-Item 4
-Item 5
-fdsnknkjsfjksdfkjsdhjkx
+Item 1|700
+Item 2|1000
+Item 3|2000
+Item 4|900
+Item 5|10
